@@ -10,25 +10,24 @@
 package roombaControl
 
 import (
-	"fmt"
 	"time"
 	"github.com/stianeikeland/go-rpio"
 )
 
 type Stepper struct {
-	pin_step Pin
+	pin_step rpio.Pin
 	delayMillisecond int
-	pin_microstep1 Pin
-	pin_microstep2 Pin
-	pin_microstep3 Pin
+	pin_microstep1 rpio.Pin
+	pin_microstep2 rpio.Pin
+	pin_microstep3 rpio.Pin
 }
 
 func (s Stepper) step() {
 	s.pin_step.Output()
 	s.pin_step.High()
-	time.Sleep(delayMillisecond * time.Millisecond)
+	time.Sleep(time.Duration(s.delayMillisecond) * time.Millisecond)
 	s.pin_step.Low()
-	time.Sleep(delayMillisecond * time.Millisecond)
+	time.Sleep(time.Duration(s.delayMillisecond) * time.Millisecond)
 }
 
 func (s Stepper) set_full_step() {
@@ -76,6 +75,6 @@ func (s Stepper) set_sixteenth_step() {
 	s.pin_microstep3.High()
 }
 
-func initializeStepper(pin_step int, delayMillisecond int, pin_microstep1 int, pin_microstep2 int, pin_microstep3 int) *Stepper {
-	return Stepper{rpio.Pin(pin_step), delayMillisecond, rpio.Pin(pin_microstep1), pio.Pin(pin_microstep2), pio.Pin(pin_microstep3)}
+func InitializeStepper(pin_step int, delayMillisecond int, pin_microstep1 int, pin_microstep2 int, pin_microstep3 int) Stepper {
+	return Stepper{rpio.Pin(pin_step), delayMillisecond, rpio.Pin(pin_microstep1), rpio.Pin(pin_microstep2), rpio.Pin(pin_microstep3)}
 }
