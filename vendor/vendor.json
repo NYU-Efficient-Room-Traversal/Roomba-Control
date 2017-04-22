@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "He+iIBiVfy0WLVtjCRI0ClsSRAQ=",
+			"path": "github.com/tarm/serial",
+			"revision": "37be519d49878d0098e34fb614136b81e6c87861",
+			"revisionTime": "2016-05-08T04:09:34Z"
+		}
+	],
+	"rootPath": "github.com/NYU-Efficient-Room-Traversal/Roomba-Control"
+}
