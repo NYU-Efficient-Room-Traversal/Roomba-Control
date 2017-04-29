@@ -18,8 +18,9 @@ import (
 )
 
 const (
-	SERIAL_INTERFACE = "/dev/ttyAMA0"
+	SERIAL_INTERFACE = "ttyAMA0"
 	BAUD             = 115200
+	SPEED            = 200
 )
 
 var (
@@ -27,6 +28,7 @@ var (
 )
 
 func init() {
+	// Open Connection to Serial Port
 	c := &serial.Config{Name: SERIAL_INTERFACE, Baud: BAUD}
 	var err error
 	ser, err = serial.OpenPort(c)
@@ -34,6 +36,13 @@ func init() {
 		fmt.Println(err)
 		log.Fatal(err)
 	}
+
+	// Motor Priming
+	ModeStart()
+	ModeSafe()
+	Stop()
+
+	fmt.Println("Roomba is ready")
 }
 
 //
@@ -51,7 +60,7 @@ func ModeSafe() {
 }
 
 func ModeDriveDirect() {
-	fmt.Println("In safe mode")
+	fmt.Println("In drive direct mode")
 	write(145)
 }
 
@@ -94,6 +103,7 @@ func read() []byte {
 // Sensor Functions
 //
 
+// TODO: Implement if needed
 func GetStasis() {}
 
 func GetBumps() {}
@@ -112,10 +122,37 @@ func drive(velocity, angle int) {
 	write(radLow)
 }
 
-func Forward() {}
+func Forward() {
+	fmt.Println("Forward...")
+	drive(SPEED, 0)
+}
 
-func Backward() {}
+func Backward() {
+	fmt.Println("Backward...")
+	drive(SPEED*-1, 0)
+}
 
-func Stop() {}
+func Stop() {
+	fmt.Println("Stopping...")
+	velHigh, velLow := toHex(0)
+	radHigh, radLow := toHex(0)
+	write(137)
+	write(velHigh)
+	write(velLow)
+	write(radHigh)
+	write(radLow)
+}
 
-func Turn() {}
+func Turn() {
+	fmt.Println("Turning...")
+	drive(SPEED, -1)
+	// 0.54 is ~ 90 degrees
+	time.Sleep(54 * time.Millisecond)
+}
+
+func TurnLeft() {
+	fmt.Println("Turning...")
+	drive(SPEED, 1)
+	// 0.54 is ~ 90 degrees
+	time.Sleep(54 * time.Millisecond)
+}
