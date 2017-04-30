@@ -17,6 +17,7 @@ import (
 type Stepper struct {
 	pin_step rpio.Pin
 	delayMillisecond int
+	pin_direction rpio.Pin
 	pin_microstep1 rpio.Pin
 	pin_microstep2 rpio.Pin
 	pin_microstep3 rpio.Pin
@@ -36,6 +37,22 @@ func (s Stepper) step() {
 	time.Sleep(time.Duration(s.delayMillisecond) * time.Millisecond)
 	s.pin_step.Low()
 	time.Sleep(time.Duration(s.delayMillisecond) * time.Millisecond)
+}
+
+/*
+
+Here's the exported State constant from rpio
+// State of pin, High / Low
+const (
+	Low State = iota
+	High
+)
+
+*/
+
+func (s Stepper) set_direction(state rpio.State) {
+	s.pin_direction.Output()
+	s.pin_direction.Write(state)
 }
 
 func (s Stepper) set_full_step() {
@@ -83,6 +100,6 @@ func (s Stepper) set_sixteenth_step() {
 	s.pin_microstep3.High()
 }
 
-func InitializeStepper(pin_step int, delayMillisecond int, pin_microstep1 int, pin_microstep2 int, pin_microstep3 int) Stepper {
-	return Stepper{rpio.Pin(pin_step), delayMillisecond, rpio.Pin(pin_microstep1), rpio.Pin(pin_microstep2), rpio.Pin(pin_microstep3)}
+func InitializeStepper(pin_step int, delayMillisecond int, pin_direction, pin_microstep1 int, pin_microstep2 int, pin_microstep3 int) Stepper {
+	return Stepper{rpio.Pin(pin_step), delayMillisecond, rpio.Pin(pin_direction), rpio.Pin(pin_microstep1), rpio.Pin(pin_microstep2), rpio.Pin(pin_microstep3)}
 }
