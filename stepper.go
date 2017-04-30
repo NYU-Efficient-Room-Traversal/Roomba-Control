@@ -22,6 +22,14 @@ type Stepper struct {
 	pin_microstep3 rpio.Pin
 }
 
+func (s Stepper) spin() {
+	count := 0
+	for count < 1600 {
+		s.step()
+		count += 1
+	}
+}
+
 func (s Stepper) step() {
 	s.pin_step.Output()
 	s.pin_step.High()
