@@ -16,22 +16,22 @@ import (
 
 type Stepper struct {
 	pin_step rpio.Pin
-	delayMillisecond int
+	delayMillisecond float64
 	pin_direction rpio.Pin
 	pin_microstep1 rpio.Pin
 	pin_microstep2 rpio.Pin
 	pin_microstep3 rpio.Pin
 }
 
-func (s Stepper) spin() {
+func (s Stepper) Spin() {
 	count := 0
 	for count < 1600 {
-		s.step()
+		s.Step()
 		count += 1
 	}
 }
 
-func (s Stepper) step() {
+func (s Stepper) Step() {
 	s.pin_step.Output()
 	s.pin_step.High()
 	time.Sleep(time.Duration(s.delayMillisecond) * time.Millisecond)
@@ -100,6 +100,6 @@ func (s Stepper) set_sixteenth_step() {
 	s.pin_microstep3.High()
 }
 
-func InitializeStepper(pin_step int, delayMillisecond int, pin_direction, pin_microstep1 int, pin_microstep2 int, pin_microstep3 int) Stepper {
+func InitializeStepper(pin_step int, delayMillisecond float64, pin_direction, pin_microstep1 int, pin_microstep2 int, pin_microstep3 int) Stepper {
 	return Stepper{rpio.Pin(pin_step), delayMillisecond, rpio.Pin(pin_direction), rpio.Pin(pin_microstep1), rpio.Pin(pin_microstep2), rpio.Pin(pin_microstep3)}
 }
